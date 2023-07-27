@@ -1,4 +1,4 @@
-const { studentModel } = require("../models/studentModel");
+const { studentModel,applicationModel } = require("../models/studentModel");
 const multer = require("multer");
 const uploadFile = require("../utils/uploadFile");
 // const uploadFile = require("../assets/images/");
@@ -14,23 +14,26 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-const addStudent = async (req, res) => {
+
+
+
+const addApplication = async (req, res) => {
   try {
-    upload.single("file"),
-      async (req, res) => {
-        if (!req.file) {
-          return res.status(400).json({ error: "No file received" });
-        }
-        let { status, data } = await uploadFile(
-          "name",
-          "interviewQuestions",
-          "../assets/images/file-285.png"
-        );
-        console.log(status, data, "file uploaded");
-        const students = await studentModel.find();
-        console.log(students.length);
-        const student = new studentModel({
-          studentCode: students.length + 1,
+    // upload.single("file"),
+    //   async (req, res) => {
+    //     if (!req.file) {
+    //       return res.status(400).json({ error: "No file received" });
+    //     }
+    //     let { status, data } = await uploadFile(
+    //       "name",
+    //       "interviewQuestions",
+    //       "../assets/images/file-285.png"
+    //     )};
+        // console.log(status, data, "file uploaded");
+        const applications = await applicationModel.find();
+        console.log(applications.length);
+        const application = new applicationModel({
+          studentCode: applications.length + 1,
           name: req.body.name,
           fatherName: req.body.fatherName,
           cnic: req.body.cnic,
@@ -42,15 +45,69 @@ const addStudent = async (req, res) => {
           address: req.body.address,
           dob: req.body.dob,
         });
-        await student.save();
-        console.log("added student");
-        res.send("added");
-      };
+        await application.save();
+        console.log("added student",req.body);
+        res.json({message:"added"});
   } catch (error) {
     console.log(error);
     res.send(error);
   }
 };
+
+
+const getApplications = async (req, res) => {
+  try {
+    const application = await applicationModel.find();
+    console.log(application);
+    res.json({
+      message: "success",
+      application,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "error",
+    });
+  }
+};
+
+const deleteApplication = async (req, res) => {
+  try {
+    const application = await applicationModel.deleteOne({studentCode:req.body.studentCode});
+    const applications = await applicationModel.find();
+    console.log(application);
+    res.json({
+      message: "success",
+      applications,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "error",
+    });
+  }
+};
+
+const addStudents = async (req, res) => {
+  try {
+    const students = await applicationModel.find({email:req.body.email});
+    const addStudent=await studentModel.insertMany(students)
+    const deleteApplication = await applicationModel.deleteOne({email:req.body.email});
+    const applications = await applicationModel.find();
+    
+    console.log(students,'added');
+    res.json({
+      message: "success",
+      applications,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "error",
+    });
+  }
+};
+
 
 const getStudents = async (req, res) => {
   try {
@@ -68,4 +125,6 @@ const getStudents = async (req, res) => {
   }
 };
 
-module.exports = { addStudent, getStudents };
+
+
+module.exports = { addApplication, getStudents,getApplications,addStudents,deleteApplication };

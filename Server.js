@@ -6,7 +6,7 @@ const db = require("./src/config/dbConnection");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 // const multer = require('multer');
-const addStudent=require("./src/routes/studentRoutes")
+const studentRoutes=require("./src/routes/studentRoutes")
 const users = require("./src/routes/userRoutes");
 
 /////////////////////////////////using and calling functions////////// 
@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 
 
 ///////////////////////////routes///////////////////////////////
-app.use("/students", addStudent);
+app.use("/student", studentRoutes);
 app.use("/auth", users);
 
 /////////////////////////////listning node server/////////////////
