@@ -30,10 +30,12 @@ const addApplication = async (req, res) => {
     //       "../assets/images/file-285.png"
     //     )};
         // console.log(status, data, "file uploaded");
-        const applications = await applicationModel.find();
-        console.log(applications.length);
+        let num=Math.random()*9999
+        let code=Math.floor(num)
+        // const applications = await applicationModel.find();
+        // console.log(applications.length);
         const application = new applicationModel({
-          studentCode: applications.length + 1,
+          studentCode: code,
           name: req.body.name,
           fatherName: req.body.fatherName,
           cnic: req.body.cnic,
@@ -126,5 +128,37 @@ const getStudents = async (req, res) => {
 };
 
 
+const payFees = async (req, res) => {
+  try {
+    const student = await studentModel.updateOne({email:req.body.email,  fees: { $elemMatch: { month: req.body.month }}},{$set:{'fees.$.status':"Submitted"}})
+console.log('updated');
+    res.json({
+      message: "success",
+      
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "error",
+    });
+  }
+};
 
-module.exports = { addApplication, getStudents,getApplications,addStudents,deleteApplication };
+const getIndividualStudent = async (req, res) => {
+  try {
+    const students = await studentModel.find({email:req.body.email});
+
+    console.log(students);
+    res.json({
+      message: "success",
+      response:students[0]
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "error",
+    });
+  }
+};
+
+module.exports = { addApplication, getStudents,getApplications,addStudents,deleteApplication,payFees ,getIndividualStudent};
