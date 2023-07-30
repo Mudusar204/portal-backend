@@ -5,7 +5,7 @@ const port = 8000;
 const db = require("./src/config/dbConnection");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const multer = require('multer');
+const multer = require('multer');
 const studentRoutes=require("./src/routes/studentRoutes")
 const users = require("./src/routes/userRoutes");
 
@@ -17,12 +17,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 ////////////////////////multer////////////////////////////
+// let a=null
 // const storage = multer.diskStorage({
+  
 //   destination: function (req, file, cb) {
 //     cb(null, './src/assets/images');
 //   },
 //   filename: function (req, file, cb) {
 //     const uniqueSuffix = Math.round(Math.random() * 1000)
+//     a=uniqueSuffix
 //     cb(null, file.fieldname + '-' + uniqueSuffix+".png");
 //   },
 // });
@@ -34,7 +37,7 @@ app.use(bodyParser.json());
 //     return res.status(400).json({ error: 'No file received' });
 //   }
  
-//   res.json({ message: 'File uploaded successfully' });
+//   res.json({ message: 'File uploaded successfully',path:`file-${a}.png` });
 // });
 
 
